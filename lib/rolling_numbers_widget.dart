@@ -71,18 +71,19 @@ class _NumberWidgetState extends State<_NumberWidget> with SingleTickerProviderS
     _controller.animateTo(1, duration: Duration(milliseconds: 200 * numbers.length));
   }
 
+  static const _numbersList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
   @override
   void didUpdateWidget(covariant _NumberWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final numbersList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
     if (widget.number >= oldWidget.number) {
       numbers
         ..clear()
-        ..addAll(numbersList.sublist(oldWidget.number, widget.number + 1));
+        ..addAll(_numbersList.sublist(oldWidget.number, widget.number + 1));
     } else {
-      final a = numbersList.sublist(oldWidget.number);
-      final b = numbersList.sublist(0, widget.number + 1);
+      final a = _numbersList.sublist(oldWidget.number);
+      final b = _numbersList.sublist(0, widget.number + 1);
       numbers
         ..clear()
         ..addAll(a + b);
