@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/animation/animation_controller.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:flutter/src/widgets/ticker_provider.dart';
 
 class RollingNumbers extends StatelessWidget {
   final int numbers;
@@ -15,7 +11,7 @@ class RollingNumbers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.black,
         borderRadius: BorderRadius.circular(50),
@@ -31,12 +27,7 @@ class RollingNumbers extends StatelessWidget {
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            stops: [
-              0,
-              0.4,
-              0.6,
-              1,
-            ]),
+            stops: const [0, 0.4, 0.6, 1]),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -83,16 +74,19 @@ class _NumberWidgetState extends State<_NumberWidget> with SingleTickerProviderS
   @override
   void didUpdateWidget(covariant _NumberWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final numbersList = List.generate(10, (index) => index.toString());
-    final newNumebersList = numbersList.sublist(0,widget.number);
+    final numbersList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
-    final b = numbersList.sublist(oldWidget.number);
-    // print(b);
-    print(newNumebersList);
-
-    numbers
-      ..clear()
-      ..addAll(b + newNumebersList);
+    if (widget.number >= oldWidget.number) {
+      numbers
+        ..clear()
+        ..addAll(numbersList.sublist(oldWidget.number, widget.number + 1));
+    } else {
+      final a = numbersList.sublist(oldWidget.number);
+      final b = numbersList.sublist(0, widget.number + 1);
+      numbers
+        ..clear()
+        ..addAll(a + b);
+    }
     _animate();
   }
 
@@ -109,8 +103,8 @@ class _NumberWidgetState extends State<_NumberWidget> with SingleTickerProviderS
       child: SizedBox(
         child: Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 2),
               child: Opacity(opacity: 0, child: Text('8')),
             ),
             Positioned(

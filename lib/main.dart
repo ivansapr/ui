@@ -21,7 +21,7 @@ class _MainAppState extends State<MainApp> {
   void initState() {
     super.initState();
     final r = Random();
-    numbers = 1;//r.nextInt(1);
+    numbers = r.nextInt(1);
   }
 
   @override
@@ -30,7 +30,8 @@ class _MainAppState extends State<MainApp> {
       home: Scaffold(
         floatingActionButton: FloatingActionButton(onPressed: () {
           setState(() {
-            numbers += 1;
+            final r = Random();
+            numbers = r.nextInt(9999);
           });
         }),
         body: Center(
