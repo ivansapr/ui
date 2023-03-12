@@ -29,7 +29,6 @@ jobs:
         with:
           flutter-version: '3.7.6'
           channel: 'stable'
-           - uses: subosito/flutter-action@v1
       - uses: bluefireteam/flutter-gh-pages@v8
         with:
             baseHref: /ui/
