@@ -161,7 +161,7 @@ class _CustomDropDownState extends State<CustomDropDown> with SingleTickerProvid
   }
 }
 
-class _Header extends StatelessWidget {
+class _Header extends StatefulWidget {
   final bool selected;
   final String? value;
 
@@ -171,25 +171,105 @@ class _Header extends StatelessWidget {
   });
 
   @override
+  State<_Header> createState() => _HeaderState();
+}
+
+class _HeaderState extends State<_Header> with SingleTickerProviderStateMixin {
+  String? value;
+  String? newValue;
+
+  late AnimationController _animationController;
+  late Animation<Offset> _removeAnimation;
+  late Animation<Offset> _addAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Consts.duration[200],
+    );
+    _removeAnimation = Tween<Offset>(begin: Offset.zero, end: Offset(0, -2)).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Interval(0, 0.5, curve: Curves.easeInOut),
+      ),
+    );
+    _addAnimation = Tween<Offset>(begin: Offset(0, 2), end: Offset.zero).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Interval(0.5, 1, curve: Curves.easeInOut),
+      ),
+    );
+    value = widget.value;
+  }
+
+  @override
+  void didUpdateWidget(covariant _Header oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value == widget.value) {
+      return;
+    }
+    newValue = widget.value;
+    _animationController.forward(from: 0).then((value) {
+      this.value = newValue;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
+      clipBehavior: Clip.hardEdge,
       padding: const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 10),
       decoration: BoxDecoration(
         color: _buttonBackgroundColor,
         borderRadius: _radius[2],
       ),
+      foregroundDecoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            _buttonBackgroundColor,
+            _buttonBackgroundColor.withOpacity(00),
+            _buttonBackgroundColor.withOpacity(00),
+            _buttonBackgroundColor,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: const [0, 0.4,0.6, 1],
+        ),
+        borderRadius: _radius[2],
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            value ?? 'Select value...',
-            style: DefaultTextStyle.of(context).style.copyWith(
-                  color: _textColor,
+          Stack(
+            children: [
+              if (newValue != null)
+                SlideTransition(
+                  position: _addAnimation,
+                  child: Text(
+                    newValue!,
+                    style: DefaultTextStyle.of(context).style.copyWith(
+                          color: _textColor,
+                        ),
+                  ),
                 ),
+              Positioned(
+                child: SlideTransition(
+                  position: _removeAnimation,
+                  child: Text(
+                    value ?? 'Select value...',
+                    style: DefaultTextStyle.of(context).style.copyWith(
+                          color: _textColor,
+                        ),
+                  ),
+                ),
+              ),
+            ],
           ),
           _AnimatedIcon(
             Icons.unfold_more_rounded,
-            color: selected ? _selectedColor : _textColor,
+            color: widget.selected ? _selectedColor : _textColor,
             duration: Consts.duration[150],
           )
         ],
@@ -296,7 +376,8 @@ class _ItemsListState extends State<_ItemsList> with SingleTickerProviderStateMi
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    _animationController =
+        AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
     _slideTransition =
         Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero).animate(CurvedAnimation(
       parent: _animationController,
