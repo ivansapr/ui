@@ -1,10 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:ui_exp/drop_down.dart';
 import 'package:ui_exp/following_letters.dart';
-import 'package:ui_exp/jumping_letters.dart';
-import 'package:ui_exp/rolling_numbers_widget.dart';
 
 void main() {
   runApp(const MainApp());
@@ -32,14 +28,14 @@ class _MainAppState extends State<MainApp> {
     return MaterialApp(
       home: FollowingLetters(
         body: Scaffold(
-          backgroundColor: Color.fromRGBO(27, 31, 36, 1),
+          backgroundColor: const Color.fromRGBO(27, 31, 36, 1),
           body: Padding(
-            padding: EdgeInsets.only(top: 200),
+            padding: const EdgeInsets.only(top: 200),
             child: Align(
               alignment: Alignment.topCenter,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: [
+                children: const [
                   // Row(
                   //   mainAxisSize: MainAxisSize.min,
                   //   children: [

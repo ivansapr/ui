@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+
+import 'package:flutter/material.dart';
+import 'package:ui_exp/consts.dart';
 
 const _textColor = Colors.white;
 const _itemTextColor = Colors.grey;
@@ -46,44 +45,59 @@ class _CustomDropDownState extends State<CustomDropDown> with SingleTickerProvid
     _animationController
         .animateTo(
           1,
-          duration: Duration(seconds: 2),
+          duration: Consts.duration[2000],
           curve: Curves.easeInOut,
         )
         .then((value) => _animationController.reset());
   }
 
-  bool opened = true;
+  bool opened = false;
 
-  void onTap(bool value) {
+  String? selectedValue;
+
+  void toggleDropDown(bool value) {
     setState(() {
       opened = value;
     });
     if (opened) {
       animate();
     } else {
-      _animationController
-          .animateTo(1, duration: Duration(milliseconds: 100))
-          .then((value) => _animationController.reset());
+      if (_animationController.isAnimating) {
+        _animationController.animateTo(
+          0,
+          duration: Consts.duration[100],
+        );
+      }
     }
   }
 
   Widget _itemsList() {
     return _ItemsList(
-      items: [
-        _Item(value: 'item1'),
-        _Item(value: 'item2'),
-      ],
+      items: List.generate(
+        3,
+        (index) {
+          final value = 'Option $index';
+          return _Item(
+            key: Key(value),
+            value: value,
+            onTap: () => setState(() {
+              selectedValue = value;
+            }),
+            selected: selectedValue == value,
+          );
+        },
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      onEnter: (event) => onTap(true),
-      onExit: (event) => onTap(false),
+      onEnter: (event) => toggleDropDown(true),
+      onExit: (event) => toggleDropDown(false),
       child: Container(
         width: 200,
-        padding: EdgeInsets.all(2),
+        padding: const EdgeInsets.all(2),
         decoration: BoxDecoration(
           color: _buttonColor,
           borderRadius: _radius[0],
@@ -109,15 +123,15 @@ class _CustomDropDownState extends State<CustomDropDown> with SingleTickerProvid
               color: _buttonColor,
               borderRadius: _radius[1],
             ),
-            clipBehavior: Clip.antiAlias,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 _Header(
+                  value: selectedValue,
                   selected: opened,
                 ),
                 AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 150),
+                  duration: Consts.duration[150],
                   switchInCurve: Curves.easeInOut,
                   switchOutCurve: Curves.easeInOut,
                   child: opened ? _itemsList() : Container(),
@@ -149,9 +163,10 @@ class _CustomDropDownState extends State<CustomDropDown> with SingleTickerProvid
 
 class _Header extends StatelessWidget {
   final bool selected;
+  final String? value;
 
   const _Header({
-    super.key,
+    this.value = 'Select value...',
     this.selected = false,
   });
 
@@ -167,7 +182,7 @@ class _Header extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Select value...',
+            value ?? 'Select value...',
             style: DefaultTextStyle.of(context).style.copyWith(
                   color: _textColor,
                 ),
@@ -175,7 +190,7 @@ class _Header extends StatelessWidget {
           _AnimatedIcon(
             Icons.unfold_more_rounded,
             color: selected ? _selectedColor : _textColor,
-            duration: Duration(milliseconds: 150),
+            duration: Consts.duration[150],
           )
         ],
       ),
@@ -185,19 +200,35 @@ class _Header extends StatelessWidget {
 
 class _Item extends StatefulWidget {
   final String value;
-  const _Item({super.key, required this.value});
+  final void Function()? onTap;
+  final bool selected;
+  const _Item({super.key, required this.value, this.onTap, this.selected = false});
 
   @override
   State<_Item> createState() => _ItemState();
 }
 
 class _ItemState extends State<_Item> {
+  late bool selected;
+
   bool hover = false;
 
   void onHover() {
     setState(() {
       hover = !hover;
     });
+  }
+
+  @override
+  void initState() {
+    selected = widget.selected;
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant _Item oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    selected = widget.selected;
   }
 
   @override
@@ -210,21 +241,39 @@ class _ItemState extends State<_Item> {
         hover = false;
       }),
       cursor: MaterialStateMouseCursor.clickable,
-      child: AnimatedContainer(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
-        curve: Curves.easeInOut,
-        duration: const Duration(milliseconds: 100),
-        decoration: BoxDecoration(
-          color: hover ? _hoverColor : _buttonColor,
-          borderRadius: _radius[3],
-        ),
-        child: AnimatedDefaultTextStyle(
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
           curve: Curves.easeInOut,
-          duration: const Duration(milliseconds: 200),
-          style: DefaultTextStyle.of(context).style.copyWith(
-                color: hover ? _selectedColor : _itemTextColor,
-              ),
-          child: Text(widget.value),
+          duration: const Duration(milliseconds: 100),
+          decoration: BoxDecoration(
+            color: hover ? _hoverColor : _buttonColor,
+            borderRadius: _radius[3],
+          ),
+          child: AnimatedDefaultTextStyle(
+            curve: Curves.easeInOut,
+            duration: const Duration(milliseconds: 200),
+            style: DefaultTextStyle.of(context).style.copyWith(
+                  color: hover ? _selectedColor : _itemTextColor,
+                ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(widget.value),
+                AnimatedCrossFade(
+                  firstChild: const SizedBox(width: 15, height: 15),
+                  secondChild: const Icon(
+                    Icons.check_rounded,
+                    color: _selectedColor,
+                    size: 15,
+                  ),
+                  crossFadeState: selected ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                  duration: const Duration(milliseconds: 200),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -233,7 +282,7 @@ class _ItemState extends State<_Item> {
 
 class _ItemsList extends StatefulWidget {
   final List<Widget> items;
-  const _ItemsList({super.key, required this.items});
+  const _ItemsList({required this.items});
 
   @override
   State<_ItemsList> createState() => _ItemsListState();
@@ -247,9 +296,9 @@ class _ItemsListState extends State<_ItemsList> with SingleTickerProviderStateMi
   @override
   void initState() {
     super.initState();
-    print('initState');
-    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 400));
-    _slideTransition = Tween<Offset>(begin: Offset(0, 1), end: Offset.zero).animate(CurvedAnimation(
+    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    _slideTransition =
+        Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeOut,
     ));
@@ -258,8 +307,27 @@ class _ItemsListState extends State<_ItemsList> with SingleTickerProviderStateMi
     startAnimation();
   }
 
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   Future<void> startAnimation() async {
     _animationController.forward();
+  }
+
+  Widget buildList() {
+    return ListView.separated(
+      padding: const EdgeInsets.only(top: 5),
+      shrinkWrap: true,
+      itemCount: widget.items.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 5),
+      itemBuilder: (context, index) {
+        final item = widget.items[index];
+        return HoverAnimation(child: item);
+      },
+    );
   }
 
   @override
@@ -269,10 +337,10 @@ class _ItemsListState extends State<_ItemsList> with SingleTickerProviderStateMi
       child: SlideTransition(
         position: _slideTransition,
         child: ListView.separated(
-          padding: EdgeInsets.only(top: 5),
+          padding: const EdgeInsets.only(top: 5),
           shrinkWrap: true,
           itemCount: widget.items.length,
-          separatorBuilder: (context, index) => SizedBox(height: 5),
+          separatorBuilder: (context, index) => const SizedBox(height: 5),
           itemBuilder: (context, index) {
             final item = widget.items[index];
             return HoverAnimation(child: item);
@@ -291,10 +359,10 @@ class HoverAnimation extends StatelessWidget {
   Widget build(BuildContext context) {
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 1, end: 0),
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
       builder: (context, value, child) => Container(
         foregroundDecoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.3 * value),
+          color: Colors.white.withOpacity(0.2 * value),
           borderRadius: _radius[3],
         ),
         child: child,
@@ -309,7 +377,6 @@ class _AnimatedIcon extends StatefulWidget {
   final Duration duration;
   const _AnimatedIcon(
     this.icon, {
-    super.key,
     required this.color,
     required this.duration,
   });

@@ -49,7 +49,7 @@ class _JumpingLettersState extends State<JumpingLetters> {
               children: value.toUpperCase().split('').map((e) => _JumpingLetter(char: e)).toList(),
             ),
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           SizedBox(
             width: 100,
             child: TextField(
@@ -64,7 +64,7 @@ class _JumpingLettersState extends State<JumpingLetters> {
 
 class _JumpingLetter extends StatefulWidget {
   final String char;
-  const _JumpingLetter({super.key, required this.char});
+  const _JumpingLetter({required this.char});
 
   @override
   State<_JumpingLetter> createState() => _JumpingLetterState();

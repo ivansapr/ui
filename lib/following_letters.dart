@@ -1,8 +1,5 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
-
 import 'package:flutter/services.dart';
 
 class FollowingLetters extends StatefulWidget {
@@ -25,7 +22,7 @@ class _FollowingLettersState extends State<FollowingLetters> {
     if (positions.isEmpty) {
       positions.add(_mousePosition!.localPosition);
     } else {
-      positions.add(positions.last + Offset(10, 10) * positions.last.direction);
+      positions.add(positions.last + const Offset(10, 10) * positions.last.direction);
     }
   }
 
@@ -114,9 +111,9 @@ class DrawingPainter extends CustomPainter {
     for (var i = 0; i < characters.length; i++) {
       final char = characters[i];
       final position = positions[i];
-      final angle = 0.0;
+      const angle = 0.0;
 
-      final TextStyle style = TextStyle(color: Colors.black);
+      const TextStyle style = TextStyle(color: Colors.black);
       final textPainter = TextPainter(
         text: TextSpan(
           text: char,

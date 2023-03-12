@@ -39,7 +39,7 @@ class RollingNumbers extends StatelessWidget {
 
 class _NumberWidget extends StatefulWidget {
   final int number;
-  const _NumberWidget({super.key, required this.number});
+  const _NumberWidget({required this.number});
 
   @override
   State<_NumberWidget> createState() => _NumberWidgetState();
