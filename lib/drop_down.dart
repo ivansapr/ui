@@ -62,7 +62,7 @@ class _CustomDropDownState extends State<CustomDropDown> with SingleTickerProvid
     if (opened) {
       animate();
     } else {
-      if (_animationController.isAnimating) {
+      if (_animationController.isAnimating && _animationController.value < 0.5) {
         _animationController.animateTo(
           0,
           duration: Consts.duration[100],
@@ -95,64 +95,68 @@ class _CustomDropDownState extends State<CustomDropDown> with SingleTickerProvid
     return MouseRegion(
       onEnter: (event) => toggleDropDown(true),
       onExit: (event) => toggleDropDown(false),
-      child: Container(
-        width: 200,
-        padding: const EdgeInsets.all(2),
-        decoration: BoxDecoration(
-          color: _buttonColor,
-          borderRadius: _radius[0],
-          gradient: SweepGradient(
-            colors: [
-              _buttonColor,
-              Color.lerp(_selectedColor, _buttonColor, _colorAnimation.value.abs()) ?? _buttonColor,
-              _buttonColor,
-            ],
-            startAngle: 3 * math.pi / 2,
-            endAngle: 2 * math.pi,
-            transform: GradientRotation(_gradientAnimation.value),
-          ),
-        ),
+      child: GestureDetector(
+        onTap: () => toggleDropDown(!opened),
         child: Container(
+          width: 200,
+          padding: const EdgeInsets.all(2),
           decoration: BoxDecoration(
             color: _buttonColor,
             borderRadius: _radius[0],
+            gradient: SweepGradient(
+              colors: [
+                _buttonColor,
+                Color.lerp(_selectedColor, _buttonColor, _colorAnimation.value.abs()) ??
+                    _buttonColor,
+                _buttonColor,
+              ],
+              startAngle: 3 * math.pi / 2,
+              endAngle: 2 * math.pi,
+              transform: GradientRotation(_gradientAnimation.value),
+            ),
           ),
-          padding: const EdgeInsets.all(3.0),
           child: Container(
             decoration: BoxDecoration(
               color: _buttonColor,
-              borderRadius: _radius[1],
+              borderRadius: _radius[0],
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _Header(
-                  value: selectedValue,
-                  selected: opened,
-                ),
-                AnimatedSwitcher(
-                  duration: Consts.duration[150],
-                  switchInCurve: Curves.easeInOut,
-                  switchOutCurve: Curves.easeInOut,
-                  child: opened ? _itemsList() : Container(),
-                  transitionBuilder: (child, animation) => FadeTransition(
-                    opacity: animation,
-                    child: SizeTransition(
-                      sizeFactor: animation,
-                      child: child,
-                    ),
+            padding: const EdgeInsets.all(3.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: _buttonColor,
+                borderRadius: _radius[1],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _Header(
+                    value: selectedValue,
+                    selected: opened,
                   ),
-                  layoutBuilder: (currentChild, previousChildren) {
-                    return Stack(
-                      alignment: Alignment.topCenter,
-                      children: <Widget>[
-                        if (currentChild != null) currentChild,
-                        ...previousChildren,
-                      ],
-                    );
-                  },
-                ),
-              ],
+                  AnimatedSwitcher(
+                    duration: Consts.duration[150],
+                    switchInCurve: Curves.easeInOut,
+                    switchOutCurve: Curves.easeInOut,
+                    child: opened ? _itemsList() : Container(),
+                    transitionBuilder: (child, animation) => FadeTransition(
+                      opacity: animation,
+                      child: SizeTransition(
+                        sizeFactor: animation,
+                        child: child,
+                      ),
+                    ),
+                    layoutBuilder: (currentChild, previousChildren) {
+                      return Stack(
+                        alignment: Alignment.topCenter,
+                        children: <Widget>[
+                          if (currentChild != null) currentChild,
+                          ...previousChildren,
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -235,7 +239,7 @@ class _HeaderState extends State<_Header> with SingleTickerProviderStateMixin {
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          stops: const [0, 0.4,0.6, 1],
+          stops: const [0, 0.4, 0.6, 1],
         ),
         borderRadius: _radius[2],
       ),
