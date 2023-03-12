@@ -7,7 +7,7 @@ name: Flutter Web
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "github_pages" ]
   workflow_dispatch:
 
 permissions:
