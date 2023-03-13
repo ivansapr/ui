@@ -124,8 +124,9 @@ class _CustomDropDownState extends State<CustomDropDown> with SingleTickerProvid
             child: Container(
               decoration: BoxDecoration(
                 color: _buttonColor,
-                borderRadius:BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(15),
               ),
+              clipBehavior: Clip.hardEdge,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -421,15 +422,29 @@ class _ItemsListState extends State<_ItemsList> with SingleTickerProviderStateMi
       opacity: _opacityTransition,
       child: SlideTransition(
         position: _slideTransition,
-        child: ListView.separated(
-          padding: const EdgeInsets.only(top: 5),
-          shrinkWrap: true,
-          itemCount: widget.items.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 5),
-          itemBuilder: (context, index) {
-            final item = widget.items[index];
-            return HoverAnimation(child: item);
-          },
+        child: Container(
+          foregroundDecoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                _buttonColor,
+                _buttonColor.withOpacity(00),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: const [0, 0.1],
+            ),
+            // borderRadius: BorderRadius.circular(15),
+          ),
+          child: ListView.separated(
+            padding: const EdgeInsets.only(top: 5),
+            shrinkWrap: true,
+            itemCount: widget.items.length,
+            separatorBuilder: (context, index) => const SizedBox(height: 5),
+            itemBuilder: (context, index) {
+              final item = widget.items[index];
+              return HoverAnimation(child: item);
+            },
+          ),
         ),
       ),
     );
@@ -447,7 +462,7 @@ class HoverAnimation extends StatelessWidget {
       duration: const Duration(milliseconds: 500),
       builder: (context, value, child) => Container(
         foregroundDecoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.2 * value),
+          color: Colors.white.withOpacity(0.1 * value),
           borderRadius: BorderRadius.circular(15),
         ),
         child: child,
