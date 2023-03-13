@@ -102,7 +102,7 @@ class _CustomDropDownState extends State<CustomDropDown> with SingleTickerProvid
           padding: const EdgeInsets.all(2),
           decoration: BoxDecoration(
             color: _buttonColor,
-            borderRadius: _radius[0],
+            borderRadius: BorderRadius.circular(20),
             gradient: SweepGradient(
               colors: [
                 _buttonColor,
@@ -118,13 +118,13 @@ class _CustomDropDownState extends State<CustomDropDown> with SingleTickerProvid
           child: Container(
             decoration: BoxDecoration(
               color: _buttonColor,
-              borderRadius: _radius[0],
+              borderRadius: BorderRadius.circular(18),
             ),
             padding: const EdgeInsets.all(3.0),
             child: Container(
               decoration: BoxDecoration(
                 color: _buttonColor,
-                borderRadius: _radius[1],
+                borderRadius:BorderRadius.circular(15),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -227,7 +227,7 @@ class _HeaderState extends State<_Header> with SingleTickerProviderStateMixin {
       padding: const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 10),
       decoration: BoxDecoration(
         color: _buttonBackgroundColor,
-        borderRadius: _radius[2],
+        borderRadius: BorderRadius.circular(15),
       ),
       foregroundDecoration: BoxDecoration(
         gradient: LinearGradient(
@@ -241,7 +241,7 @@ class _HeaderState extends State<_Header> with SingleTickerProviderStateMixin {
           end: Alignment.bottomCenter,
           stops: const [0, 0.4, 0.6, 1],
         ),
-        borderRadius: _radius[2],
+        borderRadius: BorderRadius.circular(15),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -333,7 +333,7 @@ class _ItemState extends State<_Item> {
           duration: const Duration(milliseconds: 100),
           decoration: BoxDecoration(
             color: hover ? _hoverColor : _buttonColor,
-            borderRadius: _radius[3],
+            borderRadius: BorderRadius.circular(15),
           ),
           child: AnimatedDefaultTextStyle(
             curve: Curves.easeInOut,
@@ -448,7 +448,7 @@ class HoverAnimation extends StatelessWidget {
       builder: (context, value, child) => Container(
         foregroundDecoration: BoxDecoration(
           color: Colors.white.withOpacity(0.2 * value),
-          borderRadius: _radius[3],
+          borderRadius: BorderRadius.circular(15),
         ),
         child: child,
       ),
