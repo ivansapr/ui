@@ -8,6 +8,8 @@ name: Flutter Web
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'lib/**'
   workflow_dispatch:
 
 permissions:
