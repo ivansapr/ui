@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ui_exp/calendar_view/selection_calendar.dart';
 import 'package:ui_exp/drop_down.dart';
 import 'package:ui_exp/following_letters.dart';
+import 'package:ui_exp/show_widget.dart';
 
 void main() {
   runApp(const MainApp());
@@ -33,9 +35,8 @@ class _MainAppState extends State<MainApp> {
             padding: const EdgeInsets.only(top: 200),
             child: Align(
               alignment: Alignment.topCenter,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
+              child: Wrap(
+                children: [
                   // Row(
                   //   mainAxisSize: MainAxisSize.min,
                   //   children: [
@@ -65,7 +66,15 @@ class _MainAppState extends State<MainApp> {
                   //   ],
                   // ),
                   // SizedBox(height: 10),
-                  CustomDropDown(),
+                  ShowWidget(
+                    title: 'Animated Drop Down',
+                    child: CustomDropDown(),
+                  ),
+                  ShowWidget(
+                    title: 'Calendar with selectable range',
+                    child: SelectionCalendar(),
+                  ),
+                  // CalendarView(),
                 ],
               ),
             ),
