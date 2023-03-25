@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:ui_exp/align_buttons_row/align_buttons.dart';
 import 'package:ui_exp/calendar_view/selection_calendar.dart';
 import 'package:ui_exp/drop_down.dart';
 import 'package:ui_exp/jumping_letters.dart';
@@ -85,6 +86,7 @@ class _MainAppState extends State<MainApp> {
                   child: SelectionCalendar(),
                 ),
                 PlanetaryDate(),
+                AlignButtons(),
               ],
             ),
           ),
