@@ -199,7 +199,6 @@ class _Line extends StatelessWidget {
   final Color color;
   final bool short;
   const _Line({
-    super.key,
     required this.color,
     this.short = false,
   });

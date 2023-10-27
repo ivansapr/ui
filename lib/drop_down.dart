@@ -194,16 +194,16 @@ class _HeaderState extends State<_Header> with SingleTickerProviderStateMixin {
       vsync: this,
       duration: Consts.duration[200],
     );
-    _removeAnimation = Tween<Offset>(begin: Offset.zero, end: Offset(0, -2)).animate(
+    _removeAnimation = Tween<Offset>(begin: Offset.zero, end: const Offset(0, -2)).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: Interval(0, 0.5, curve: Curves.easeInOut),
+        curve: const Interval(0, 0.5, curve: Curves.easeInOut),
       ),
     );
-    _addAnimation = Tween<Offset>(begin: Offset(0, 2), end: Offset.zero).animate(
+    _addAnimation = Tween<Offset>(begin: const Offset(0, 2), end: Offset.zero).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: Interval(0.5, 1, curve: Curves.easeInOut),
+        curve: const Interval(0.5, 1, curve: Curves.easeInOut),
       ),
     );
     value = widget.value;

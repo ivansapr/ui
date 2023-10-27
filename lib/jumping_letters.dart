@@ -13,18 +13,10 @@ class JumpingLetters extends StatefulWidget {
 class _JumpingLettersState extends State<JumpingLetters> {
   late final TextEditingController _textEditingController;
 
-  late String value;
-
   @override
   void initState() {
     super.initState();
-    value = widget.value;
-    _textEditingController = TextEditingController(text: value);
-    _textEditingController.addListener(() {
-      setState(() {
-        value = _textEditingController.text;
-      });
-    });
+    _textEditingController = TextEditingController(text: widget.value);
   }
 
   @override
@@ -37,87 +29,79 @@ class _JumpingLettersState extends State<JumpingLetters> {
   Widget build(BuildContext context) {
     return DefaultTextStyle(
       style: DefaultTextStyle.of(context).style.copyWith(fontSize: 20, fontWeight: FontWeight.bold),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            clipBehavior: Clip.hardEdge,
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(color: Colors.white, border: Border.all(width: 3)),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: value.toUpperCase().split('').map((e) => _JumpingLetter(char: e)).toList(),
+      child: Container(
+        clipBehavior: Clip.hardEdge,
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(color: Colors.white, border: Border.all(width: 3)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListenableBuilder(
+              listenable: _textEditingController,
+              builder: (context, _) {
+                final selection = _textEditingController.value.selection;
+                final characters = _textEditingController.text.toUpperCase().split('');
+                final children = <Widget>[];
+                for (var i = 0; i < characters.length; i++) {
+                  final char = characters[i];
+                  final child = _JumpingLetter(char: char, key: Key('$char-$i'));
+                  children.add(child);
+                }
+
+                if (selection.isCollapsed && selection.baseOffset > -1) {
+                  children.insert(
+                      selection.baseOffset,
+                      UnconstrainedBox(
+                        child: Container(
+                          width: 2,
+                          height: 20,
+                          color: Colors.blue,
+                        ),
+                      ));
+                }
+                return Focus(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: children,
+                  ),
+                );
+              },
             ),
-          ),
-          const SizedBox(width: 10),
-          SizedBox(
-            width: 100,
-            child: TextField(
-              controller: _textEditingController,
+            const SizedBox(width: 10),
+            SizedBox(
+              width: 100,
+              child: TextField(controller: _textEditingController),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-class _JumpingLetter extends StatefulWidget {
+class _JumpingLetter extends StatelessWidget {
   final String char;
-  const _JumpingLetter({required this.char});
-
-  @override
-  State<_JumpingLetter> createState() => _JumpingLetterState();
-}
-
-class _JumpingLetterState extends State<_JumpingLetter> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  late Animation<double> _animation;
-  late Animation<double> _rotation;
-
-  @override
-  void initState() {
-    super.initState();
-    final r = Random();
-
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 500 + 10 * r.nextInt(10)),
-    );
-    _animation = Tween<double>(begin: 0, end: 1)
-        .animate(CurveTween(curve: Curves.bounceOut).animate(_controller));
-    _rotation = Tween<double>(begin: 1 + (r.nextBool() ? 0.2 : -0.2), end: 1)
-        .animate(CurveTween(curve: Curves.bounceOut).animate(_controller));
-
-    _controller.forward();
-  }
-
-  @override
-  void didUpdateWidget(covariant _JumpingLetter oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.char != oldWidget.char) {
-      _controller
-        ..reset()
-        ..forward();
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  const _JumpingLetter({required this.char, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return RotationTransition(
-      turns: _rotation,
-      filterQuality: FilterQuality.low,
-      child: ScaleTransition(
-        scale: _animation,
-        child: Text(widget.char),
-      ),
+    final r = Random();
+
+    return TweenAnimationBuilder(
+      tween: Tween<double>(begin: 0, end: 1),
+      duration: Duration(milliseconds: 500 + 10 * r.nextInt(10)),
+      builder: (context, animation, child) {
+        final double angle = (r.nextBool() ? 0.2 : -0.2) * (1 - animation);
+        return Transform.scale(
+          scale: animation,
+          child: Transform.rotate(
+            angle: angle,
+            child: child,
+          ),
+        );
+      },
+      curve: Curves.bounceOut,
+      child: Text(char),
     );
   }
 }

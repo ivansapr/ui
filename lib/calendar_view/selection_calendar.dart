@@ -6,6 +6,6 @@ class SelectionCalendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CalendarView();
+    return const CalendarView();
   }
 }

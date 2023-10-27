@@ -29,7 +29,7 @@ class _DateRangeDragSelectorViewState extends State<DateRangeDragSelectorView> {
     final local = renderBox.globalToLocal(point);
     final size = renderBox.size;
     final rows = widget.value.weeks.length;
-    final columns = 7;
+    const columns = 7;
     final cellWidth = size.width / columns;
     final cellHeight = size.height / rows;
     final column = (local.dx / cellWidth).floor();

@@ -9,9 +9,9 @@ class Earth extends StatelessWidget {
     return PulseEffect(
       color: Colors.white.withOpacity(.4),
       radius: 12,
-      child: CircleAvatar(
+      child: const CircleAvatar(
         radius: 12,
-        backgroundColor: const Color(0xFF0B880B),
+        backgroundColor: Color(0xFF0B880B),
       ),
     );
   }

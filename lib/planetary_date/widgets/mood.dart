@@ -8,7 +8,7 @@ class Moon extends StatelessWidget {
     return Container(
       width: 12,
       height: 12,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.grey,
       ),

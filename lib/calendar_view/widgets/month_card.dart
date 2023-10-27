@@ -29,7 +29,7 @@ class MonthCard extends StatelessWidget {
 
 class _MonthNameWidget extends StatelessWidget {
   final String label;
-  const _MonthNameWidget({super.key, required this.label});
+  const _MonthNameWidget({required this.label});
 
   @override
   Widget build(BuildContext context) {

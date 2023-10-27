@@ -1,5 +1,3 @@
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/widgets.dart';
 
 class TapEffect extends StatefulWidget {
@@ -18,7 +16,7 @@ class _TapEffectState extends State<TapEffect> {
     setState(() {
       scale = 0.95;
     });
-    Future.delayed(Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 200), () {
       setState(() {
         scale = 1.0;
       });
@@ -32,7 +30,7 @@ class _TapEffectState extends State<TapEffect> {
       onPointerDown: (_) => onTap(),
       child: AnimatedScale(
         scale: scale,
-        duration: Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
         child: widget.child,
       ),

@@ -4,13 +4,18 @@ publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: '>=2.19.3 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
+  bezier: ^1.2.0
   dotted_border: ^2.0.0+3
+  fl_chart: ^0.63.0
   flutter:
     sdk: flutter
   intl: ^0.18.0
+  vector_math: ^2.1.4
+  flutter_shaders: ^0.1.0
+
 
 dev_dependencies:
   flutter_test:
@@ -19,3 +24,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  shaders:
+    - shaders/ripple.frag
+    - shaders/simple.frag

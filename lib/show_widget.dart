@@ -4,17 +4,16 @@ class ShowWidget extends StatelessWidget {
   final String title;
   final Widget child;
 
-  ShowWidget({required this.title, required this.child});
+  const ShowWidget({super.key, required this.title, required this.child});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Column(
+    return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             color: Colors.white,
           ),
@@ -24,6 +23,6 @@ class ShowWidget extends StatelessWidget {
           child: child,
         ),
       ],
-    ));
+    );
   }
 }

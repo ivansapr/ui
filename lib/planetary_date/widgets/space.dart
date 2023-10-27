@@ -6,7 +6,7 @@ class SpaceCard extends StatelessWidget {
   final Widget child;
   final Size size;
 
-  SpaceCard({required this.child, super.key, required this.size});
+  const SpaceCard({required this.child, super.key, required this.size});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class SpaceCard extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         Card(
-          color: Color(0xFF1A112D),
+          color: const Color(0xFF1A112D),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
